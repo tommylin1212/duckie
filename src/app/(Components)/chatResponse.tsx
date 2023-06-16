@@ -2,6 +2,7 @@
 import hljs from 'highlight.js'
 import React, { useEffect} from 'react';
 import 'highlight.js/styles/base16/darcula.css';
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum } from 'openai';
 
 const ChatBubble = ({ text, isCode,language }:{text:string,isCode:boolean, language:string}) => (
     <div className='m-4'>
@@ -19,45 +20,58 @@ const ChatBubble = ({ text, isCode,language }:{text:string,isCode:boolean, langu
       )}
     </div>
   );
-export default function ChatResponse(props:{result:string,inputCode:string}) {
-    
+  export default function ChatResponse({ messages }: { messages: ChatCompletionRequestMessage[] }) {
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            hljs.configure({languages: ['typescript']})
-            hljs.highlightAll()
-        }
-    }, [props.result, props.inputCode]);
-
-
-    const splitResult = props.result.split(/^```/gm).map((str, index) => {
-        if (index % 2 === 0) {
-          return str.split('\n').filter(line => line.trim() !== '').map((line, lineIndex) => <ChatBubble key={`${index}-${lineIndex}`} text={line} isCode={false} language='' />);
+      if (typeof window !== 'undefined') {
+        hljs.configure({languages: ['typescript']})
+        hljs.highlightAll()
+      }
+    }, [messages]);
+  
+    // Create a new function to handle splitting the content and creating chat bubbles
+    const createChatBubble = (content: string, index: number) => {
+      return content.split(/^```/gm).map((str, subIndex) => {
+        if (subIndex % 2 === 0) {
+          return str.split('\n').filter(line => line.trim() !== '').map((line, lineIndex) => <ChatBubble key={`${index}-${subIndex}-${lineIndex}`} text={line} isCode={false} language='' />);
         } else {
           const [language, ...codeLines] = str.split('\n');
           const code = codeLines.join('\n');
-          return <ChatBubble key={index} text={code} language={language} isCode={true} />;
+          return <ChatBubble key={`${index}-${subIndex}`} text={code} language={language} isCode={true} />;
         }
       });
-
-  return (<>
-  <div className='chat chat-end'>
-      <div className='bg-gray-700 py-2 chat-bubble'>
-        <div className='mockup-code bg-zinc-900 '>
-        <pre className='bg-inherit'>
-            <code className='bg-inherit typescript '>
-                {props.inputCode}
-            </code>
-        </pre>
-      </div>
-      </div>
-    </div>
-    <div className='chat chat-start'>
-    <div className='bg-gray-700 py-2 chat-bubble'>
-    
-      {splitResult.flat()}
-      </div>
-      </div>
-      
-    </>
-  );
+    };
+  
+    // Map over the messages array and create chat bubbles depending on the role of each message
+    const messageComponents = messages.map((message, index) => {
+      if (message.role === ChatCompletionRequestMessageRoleEnum.System) {
+        // Ignore system messages
+        return null;
+      }
+  
+      const chatBubbles = createChatBubble(message.content, index);
+  
+      if (message.role === ChatCompletionRequestMessageRoleEnum.User) {
+        // For user messages, create a chat-end element
+        return (
+          <div key={index} className='chat chat-end'>
+            <div className='bg-gray-700 py-2 chat-bubble'>
+              {chatBubbles}
+            </div>
+          </div>
+        );
+      } else if (message.role === ChatCompletionRequestMessageRoleEnum.Assistant) {
+        // For assistant messages, create a chat-start element
+        return (
+          <div key={index} className='chat chat-start'>
+            <div className='bg-gray-700 py-2 chat-bubble'>
+              {chatBubbles}
+            </div>
+          </div>
+        );
+      }
+    });
+  
+    return (
+      <>{messageComponents}</>
+    );
   };

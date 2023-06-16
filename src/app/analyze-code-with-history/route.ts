@@ -3,14 +3,11 @@ import { Configuration, OpenAIApi,ChatCompletionRequestMessageRoleEnum } from "o
 
 export async function POST(req: Request, res: Response) {
     const body = await req.json();
-    const code = body.code;
+    const messages = body.messages;
 
     // Formulate your prompt here. This is just an example and may not return 
     // the expected results as the OpenAI API doesn't directly support this kind of analysis.
-    const prompt = `If no other direction is given, analyze the given code for code quality issues such as performance optimizations, readability, maintainability, and potential bugs. Provide suggestions for improvement and best practices to follow. Output the optimzed code as an example.`;
-
-    const systemMessage={role: ChatCompletionRequestMessageRoleEnum.System, content: prompt};
-    const userMessage={role: ChatCompletionRequestMessageRoleEnum.User, content: code}
+   
 
     const configuration = new Configuration({
         organization: "org-OayEqgvWQFZCPGCQ8TvfTn3J",
@@ -19,7 +16,7 @@ export async function POST(req: Request, res: Response) {
     const openai = new OpenAIApi(configuration);
     const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [systemMessage, userMessage],
+        messages: messages,
         max_tokens: 1000,
         temperature: 0,
       });
