@@ -21,7 +21,6 @@ export async function POST(req: Request, res: Response) {
         temperature: 0,
       });
     const data = response.data;
-    console.log(data?.choices?.[0]?.message?.content)
   const analysis = data?.choices?.[0]?.message?.content ?? "No analysis found.";
   return NextResponse.json({ analysis });
 }

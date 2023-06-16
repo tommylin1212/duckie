@@ -48,7 +48,7 @@ const ChatBubble = ({ text, isCode,language }:{text:string,isCode:boolean, langu
         return null;
       }
   
-      const chatBubbles = createChatBubble(message.content, index);
+      const chatBubbles = createChatBubble(message.content||'', index);
   
       if (message.role === ChatCompletionRequestMessageRoleEnum.User) {
         // For user messages, create a chat-end element

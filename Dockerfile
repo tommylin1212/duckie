@@ -15,7 +15,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # then put the value on your fly.toml
 # Example:
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
-
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_dXNhYmxlLXN1bmJpcmQtMy5jbGVyay5hY2NvdW50cy5kZXYk"
 RUN yarn build
 
 # If using npm comment out above and use below instead
