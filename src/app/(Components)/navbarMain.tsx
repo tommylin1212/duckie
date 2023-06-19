@@ -1,4 +1,4 @@
-
+'use client'
 import NavbarUser from "./navbarUser";
 export default function Navbar() {
     
@@ -12,10 +12,8 @@ export default function Navbar() {
             <div className="flex-1">
                 <a className="btn btn-ghost normal-case text-xl">Duckie</a>
             </div>
-            <div className="flex-">
-                <ul className="menu menu-horizontal px-1">
-                    <NavbarUser/>
-                </ul>
+            <div className="flex-none">
+                <NavbarUser/>
             </div>
         </div>
     )

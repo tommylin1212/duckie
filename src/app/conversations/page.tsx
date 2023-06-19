@@ -34,7 +34,6 @@ export default function Page() {
           })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             setAnalysisResult(data.analysis);
             setMessages([...messages, { role: ChatCompletionRequestMessageRoleEnum.Assistant, content: data.analysis }]);
           }

@@ -1,5 +1,5 @@
 
-import Navbar from './(Components)/navbarMain';
+import Navbar from '../(Components)/navbarMain';
 
 
 export default function Home() {
