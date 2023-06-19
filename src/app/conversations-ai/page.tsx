@@ -12,7 +12,6 @@ export default function Page() {
             <main className="flex flex-col pl-64 h-[calc(100vh-64px)] flex-grow bg-base-300">
                 <ConversationDrawer />
                 <MainChat />
-
             </main>
         </>
     );
