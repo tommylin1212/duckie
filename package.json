@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prettier:check": "prettier --check ./src/**/*.js ./src/**/*.ts ./src/**/*.tsx",
+    "prettier:write": "prettier --write ./src/**/*.js ./src/**/*.ts ./src/**/*.tsx",
+    "lint:fix": "eslint --fix --ext .js,.ts,.tsx .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -11,6 +14,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.21.3",
     "@prisma/client": "^4.15.0",
+    "@supabase/supabase-js": "^2.25.0",
     "@types/highlightjs": "^9.12.2",
     "@types/node": "20.2.5",
     "@types/react": "18.2.9",
@@ -37,6 +41,8 @@
     "@types/react-highlight": "^0.12.5",
     "@types/react-syntax-highlighter": "^15.5.7",
     "daisyui": "^3.0.22",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "prisma": "^4.15.0"
   }
 }
