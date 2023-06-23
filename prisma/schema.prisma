@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
+   previewFeatures = ["extendedWhereUnique"]
 }
 
 datasource db {
@@ -18,24 +16,28 @@ model User {
   name          String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  Conversations Conversation[]
+  Conversations Conversation[]  //User has many conversations
 }
 
 model Message {
   id             String       @id @default(cuid())
-  consverstion   Conversation @relation(fields: [conversationId], references: [id])
+  messageId      String       
+  conversation   Conversation @relation(fields: [conversationId], references: [id]) // Message belongs to a conversation
+  role           String
   conversationId String
   content        String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  @@unique([messageId, conversationId], name: "messageId_conversationId_unique")
 }
 
 model Conversation {
   id        String    @id @default(cuid())
   title     String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id]) // Conversation belongs to a user
   userId    String
-  messages  Message[]
+  messages  Message[] // Conversation has many messages
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

@@ -25,6 +25,9 @@ export async function getAllUsers(): Promise<User[]> {
 export async function getUserById(id: string): Promise<User | null> {
   return prisma.user.findUnique({ where: { id } });
 }
+export async function getUserByClerkId(clerkId: string): Promise<User | null> {
+  return prisma.user.findUnique({ where: { clerkId } });
+}
 
 export async function updateUser(
   id: string,
@@ -43,6 +46,18 @@ export async function createConversation(
   return prisma.conversation.create({ data });
 }
 
+export async function getAllConversationsByClerkId(
+  clerkId: string
+): Promise<Conversation[]> {
+  return prisma.conversation.findMany({
+    where: {
+      user:{
+          clerkId
+      }
+    },
+  });
+}
+
 export async function getAllConversations(): Promise<Conversation[]> {
   return prisma.conversation.findMany();
 }
@@ -51,6 +66,21 @@ export async function getConversationById(
   id: string
 ): Promise<Conversation | null> {
   return prisma.conversation.findUnique({ where: { id } });
+}
+
+type ConversationWithMessages = Conversation & {
+  messages: Message[];
+};
+
+export async function getConversationByIdWithMessages(
+  id: string
+): Promise<ConversationWithMessages| null> {
+  return prisma.conversation.findUnique({
+    where: { id },
+    include: {
+      messages: true,
+    },
+  });
 }
 
 export async function updateConversation(
@@ -68,6 +98,20 @@ export async function createMessage(
 ): Promise<Message> {
   return prisma.message.create({ data });
 }
+
+export async function upsertMessageByMessageIdAndConversationId(
+  messageId: string,
+  conversationId: string,
+  data: Prisma.MessageCreateInput
+): Promise<Message> {
+  return prisma.message.upsert({
+    where: { messageId_conversationId_unique: { messageId, conversationId }},
+    update: data,
+    create: data,
+  });
+}
+
+
 
 export async function getAllMessages(): Promise<Message[]> {
   return prisma.message.findMany();
