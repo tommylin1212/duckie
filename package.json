@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "turbo": "next dev --turbo"
+    "turbo": "next dev --turbo",
+    "postinstall":"prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.21.8",
