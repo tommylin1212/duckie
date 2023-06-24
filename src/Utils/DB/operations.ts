@@ -51,9 +51,12 @@ export async function getAllConversationsByClerkId(
 ): Promise<Conversation[]> {
   return prisma.conversation.findMany({
     where: {
-      user:{
-          clerkId
-      }
+      user: {
+        clerkId,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 }
@@ -74,7 +77,7 @@ type ConversationWithMessages = Conversation & {
 
 export async function getConversationByIdWithMessages(
   id: string
-): Promise<ConversationWithMessages| null> {
+): Promise<ConversationWithMessages | null> {
   return prisma.conversation.findUnique({
     where: { id },
     include: {
@@ -89,10 +92,12 @@ export async function updateConversation(
 ): Promise<Conversation> {
   return prisma.conversation.update({ where: { id }, data });
 }
-
-export async function deleteConversation(id: string): Promise<Conversation> {
-  return prisma.conversation.delete({ where: { id } });
+//needs to delete all messages in the conversation first
+export async function deleteConversation(id: string): Promise<void> {
+  await prisma.message.deleteMany({ where: { conversationId: id } });
+  await prisma.conversation.delete({ where: { id } });
 }
+
 export async function createMessage(
   data: Prisma.MessageCreateInput
 ): Promise<Message> {
@@ -105,13 +110,11 @@ export async function upsertMessageByMessageIdAndConversationId(
   data: Prisma.MessageCreateInput
 ): Promise<Message> {
   return prisma.message.upsert({
-    where: { messageId_conversationId_unique: { messageId, conversationId }},
+    where: { messageId_conversationId_unique: { messageId, conversationId } },
     update: data,
     create: data,
   });
 }
-
-
 
 export async function getAllMessages(): Promise<Message[]> {
   return prisma.message.findMany();

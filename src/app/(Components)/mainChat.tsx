@@ -3,8 +3,13 @@
 import { Message, useChat } from "ai/react";
 import { ChatCompletionRequestMessageRoleEnum } from "openai";
 import ChatContainer from "./(Chat)/ChatContainer";
-import { FormEvent, use, useEffect, useState } from "react";
-import { createConversation, createMessage, getConversationByIdWithMessages, upsertMessageByMessageIdAndConversationId } from '@/Utils/DB/operations'
+import { FormEvent, use, useEffect, useState } from "react"
+import {
+  createConversation,
+  createMessage,
+  getConversationByIdWithMessages,
+  upsertMessageByMessageIdAndConversationId,
+} from "@/Utils/DB/operations";
 import { useUser } from "@clerk/nextjs";
 
 interface MainChatProps {
@@ -12,30 +17,30 @@ interface MainChatProps {
   setConversation: (conversationId: string) => void;
 }
 
-
 async function insertMessageAsync(message: Message, conversationId: string) {
   await createMessage({
     messageId: message.id,
     content: message.content,
     role: message.role,
-    conversation: { connect: { id: conversationId } }
-  })
+    conversation: { connect: { id: conversationId } },
+  });
 }
 
-
-async function createConversationAsync(conversationTitle: string, userId: string) {
+async function createConversationAsync(
+  conversationTitle: string,
+  userId: string
+) {
   const conversation = await createConversation({
     title: conversationTitle,
-    user: { connect: { clerkId: userId } }
-  })
-  return conversation
+    user: { connect: { clerkId: userId } },
+  });
+  return conversation;
 }
-
 
 export default function MainChat(props: MainChatProps) {
   const prompt = `If no other direction is given, analyze the given code for code quality issues such as performance optimizations, readability, maintainability, and potential bugs. Provide suggestions for improvement and best practices to follow. Output the optimzed code as an example. In general, talk about code. Be open to conversation and questions after the initial submission.`;
-  const { currentConversation, setConversation } = props
-  const { user } = useUser()
+  const { currentConversation, setConversation } = props;
+  const { user } = useUser();
   const initialMessages = [
     {
       id: "0",
@@ -43,30 +48,50 @@ export default function MainChat(props: MainChatProps) {
       content: prompt,
     },
   ];
-  const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({ initialMessages });
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    setMessages,
+  } = useChat({ initialMessages });
 
   useEffect(() => {
-    setConversation(currentConversation)
+    setConversation(currentConversation);
     async function loadConversationAsync(conversationId: string) {
-      const conversation = await getConversationByIdWithMessages(conversationId);
+      const conversation = await getConversationByIdWithMessages(
+        conversationId
+      );
       if (conversation) {
         const tempMessages = conversation.messages.map((message) => {
-          let role: 'user' | 'system' | 'assistant';
-          if (message.role === 'user' || message.role === 'system' || message.role === 'assistant') {
+          let role: "user" | "system" | "assistant";
+          if (
+            message.role === "user" ||
+            message.role === "system" ||
+            message.role === "assistant"
+          ) {
             role = message.role;
           } else {
-            role = 'user'; // Assign a default role if the value is invalid
+            role = "user"; // Assign a default role if the value is invalid
             // You can also throw an error or handle the invalid value in a different way if desired
           }
-          return { id: message.messageId, role: role, content: message.content }
-        })
-        setMessages(tempMessages)
+          return {
+            id: message.messageId,
+            role: role,
+            content: message.content,
+          };
+        });
+        setMessages(tempMessages);
       }
     }
     if (currentConversation !== "") {
-      loadConversationAsync(currentConversation)
+      loadConversationAsync(currentConversation);
     }
-  }, [currentConversation])
+    if (currentConversation === "") {
+      setMessages(initialMessages);
+    }
+  }, [currentConversation]);
 
   // effect to create the conversation on the first user message
   // it will be triggered when the messages array is updated and is length 2
@@ -77,19 +102,29 @@ export default function MainChat(props: MainChatProps) {
   // need to create the conversation and then create the message
   //use the createConversationAsync function
   useEffect(() => {
-    async function createConversationAndMessageAsync(userId: string, conversationTitle: string) {
-      if (messages.length === 2 && messages[1].role === 'user') {
-        const conversation = await createConversationAsync(conversationTitle, userId)
-        await insertMessageAsync(messages[1], conversation.id)
-        setConversation(conversation.id)
+    
+   async function createConversationAndMessageAsync(
+      userId: string,
+      conversationTitle: string
+    ) {
+      if (messages.length === 2 && messages[1].role === "user") {
+        const conversation = await createConversationAsync(
+          conversationTitle,
+          userId
+        );
+        await insertMessageAsync(messages[1], conversation.id);
+        setConversation(conversation.id);
       }
     }
     if (user && messages.length > 1) {
       //first three words of the message
-      const conversationTitle = messages[1].content.split(' ').slice(0, 3).join(' ')
-      createConversationAndMessageAsync(user.id, conversationTitle)
+      const conversationTitle = messages[1].content
+        .split(" ")
+        .slice(0, 3)
+        .join(" ");
+      createConversationAndMessageAsync(user.id, conversationTitle);
     }
-  }, [messages])
+  }, [messages]);
 
   // effect to add all subsequent messages to the conversation
   // it will be triggered when the messages array is updated and is length greater than 2
@@ -97,23 +132,30 @@ export default function MainChat(props: MainChatProps) {
   // messages array updates right away as the assistant responds, it will change the length wait for isLoading to be false
   // need to take that into account
   useEffect(() => {
-    async function upsertMessageAsync(message: Message, conversationId: string) {
-      await upsertMessageByMessageIdAndConversationId(message.id, conversationId,{
-        content: message.content,
-        role: message.role,
-        conversation: { connect: { id: conversationId } },
-        messageId: message.id
-      })
+    async function upsertMessageAsync(
+      message: Message,
+      conversationId: string
+    ) {
+      await upsertMessageByMessageIdAndConversationId(
+        message.id,
+        conversationId,
+        {
+          content: message.content,
+          role: message.role,
+          conversation: { connect: { id: conversationId } },
+          messageId: message.id,
+        }
+      );
     }
     //for assistant messages
     if (messages.length > 2 && !isLoading) {
-      upsertMessageAsync(messages[messages.length - 1], currentConversation)
+      upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
     //for user messages
-    if (messages.length > 2 && messages[messages.length - 1].role === 'user') {
-      upsertMessageAsync(messages[messages.length - 1], currentConversation)
+    if (messages.length > 2 && messages[messages.length - 1].role === "user") {
+      upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
-  }, [messages, isLoading])
+  }, [messages, isLoading]);
 
 
 

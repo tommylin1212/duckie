@@ -6,12 +6,17 @@ interface ChatInputProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-const ChatInput = ({ input, handleInputChange, handleSubmit }: ChatInputProps) => (
+const ChatInput = ({
+  input,
+  handleInputChange,
+  handleSubmit,
+}: ChatInputProps) => (
   <div className="flex flex-none justify-center bg-base-100 p-4">
     <form className="flex w-full " onSubmit={handleSubmit}>
       <textarea
         className="textarea-bordered textarea textarea-lg w-full"
         value={input}
+        placeholder="Ask me something about your code!"
         onChange={handleInputChange}
       />
       <div className="flex flex-col justify-center p-2">

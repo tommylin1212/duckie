@@ -6,7 +6,9 @@ interface MessageComponentProps {
   message: Message;
 }
 
-const MessageComponent = ({ message: { content, id, role } }: MessageComponentProps) => {
+const MessageComponent = ({
+  message: { content, id, role },
+}: MessageComponentProps) => {
   const messageSideClass =
     role === ChatCompletionRequestMessageRoleEnum.User
       ? "chat-end"

@@ -9,12 +9,21 @@ interface ChatContainerProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const ChatContainer = ({ messages, input, handleInputChange, handleSubmit }: ChatContainerProps) => (
+const ChatContainer = ({
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+}: ChatContainerProps) => (
   <div className="pt-64px flex flex-1 flex-col bg-base-300">
     <div className="flex flex-1 flex-col bg-base-200">
       <ChatResponse messages={messages} />
     </div>
-    <ChatInput input={input} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+    <ChatInput
+      input={input}
+      handleInputChange={handleInputChange}
+      handleSubmit={handleSubmit}
+    />
   </div>
 );
 
