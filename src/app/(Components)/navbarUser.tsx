@@ -14,7 +14,7 @@ export default function NavbarUser() {
         email: user.emailAddresses[0].emailAddress,
       });
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, user]);
 
   if (!isLoaded || !isSignedIn) {
     return (
