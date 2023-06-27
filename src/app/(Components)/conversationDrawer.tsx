@@ -19,9 +19,9 @@ export default function ConversationDrawer(props: ConversationDrawerProps) {
     props;
   return (
     <div
-      className={`left-0 max-h-[calc(100vh-64px)] max-w-[256px] flex-col overflow-y-scroll border-r bg-base-200 ${
+      className={` z-10 fixed h-[calc(100vh-64px)] left-0 max-h-[calc(100vh-64px)] max-w-[256px] flex-col overflow-y-scroll border-r bg-base-200 ${
         showSidebar ? "flex" : "hidden"
-      }`}
+      }  md:relative md:z-0` }
     >
       <div className="navbar sticky top-0 z-10 h-10 justify-center bg-base-200">
         Conversations
@@ -44,7 +44,7 @@ export default function ConversationDrawer(props: ConversationDrawerProps) {
           >
             <div className="join w-full">
               <button
-                className=" btn-neutral btn-active join-item btn flex flex-1 flex-row overflow-hidden break-all"
+                className=" btn-neutral btn-active join-item btn flex flex-1 flex-row overflow-hidden break-words text-xs"
                 onClick={() => setConversation(conversation.id)}
               >
                 {conversation.title}
