@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prettier:check": "prettier --check ./src/**/*.js ./src/**/*.ts ./src/**/*.tsx",
-    "prettier:write": "prettier --write ./src/**/*.js ./src/**/*.ts ./src/**/*.tsx",
+    "prettier:check": "prettier --check  ./src/**/*.ts ./src/**/*.tsx",
+    "prettier:write": "prettier --write  ./src/**/*.ts ./src/**/*.tsx",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "turbo": "next dev --turbo",
-    "postinstall":"prisma generate"
+    "postinstall": "prisma generate"
   },
+  "pre-commit": [
+    "lint",
+    "prettier:write"
+  ],
   "dependencies": {
     "@clerk/nextjs": "^4.21.8",
     "@prisma/client": "^4.16.0",
@@ -44,6 +48,7 @@
     "@types/react-syntax-highlighter": "^15.5.7",
     "daisyui": "^3.0.22",
     "eslint-config-next": "^13.4.7",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "prisma": "^4.16.0"

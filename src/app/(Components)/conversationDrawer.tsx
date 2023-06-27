@@ -19,9 +19,9 @@ export default function ConversationDrawer(props: ConversationDrawerProps) {
     props;
   return (
     <div
-      className={` z-10 fixed h-[calc(100vh-64px)] left-0 max-h-[calc(100vh-64px)] max-w-[256px] flex-col overflow-y-scroll border-r bg-base-200 ${
+      className={` fixed left-0 z-10 h-[calc(100vh-64px)] max-h-[calc(100vh-64px)] max-w-[256px] flex-col overflow-y-scroll border-r bg-base-200 ${
         showSidebar ? "flex" : "hidden"
-      }  md:relative md:z-0` }
+      }  md:relative md:z-0`}
     >
       <div className="navbar sticky top-0 z-10 h-10 justify-center bg-base-200">
         Conversations
