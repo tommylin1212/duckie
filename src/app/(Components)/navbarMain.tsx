@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
 import NavbarUser from "./navbarUser";
-export default function Navbar(props: {
+
+interface NavbarProps {
   setShowSidebar?: (show: boolean) => void;
   showSidebar?: boolean;
-  }) {
+}
+
+export default function Navbar(props: NavbarProps) {
   let { setShowSidebar, showSidebar } = props;
   
   return (
