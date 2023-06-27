@@ -61,6 +61,7 @@ export default function MainChat(props: MainChatProps) {
   } = useChat({ initialMessages });
 
   useEffect(() => {
+    console.log("messages 0")
     setConversation(currentConversation);
     async function loadConversationAsync(conversationId: string) {
       const conversation = await getConversationByIdWithMessages(
@@ -105,6 +106,7 @@ export default function MainChat(props: MainChatProps) {
   // need to create the conversation and then create the message
   //use the createConversationAsync function
   useEffect(() => {
+    console.log("messages 1")
     async function createConversationAndMessageAsync(
       userId: string,
       conversationTitle: string
@@ -134,6 +136,7 @@ export default function MainChat(props: MainChatProps) {
   // messages array updates right away as the assistant responds, it will change the length wait for isLoading to be false
   // need to take that into account
   useEffect(() => {
+    console.log("messages 2")
     async function upsertMessageAsync(
       message: Message,
       conversationId: string
@@ -150,11 +153,13 @@ export default function MainChat(props: MainChatProps) {
       );
     }
     //for assistant messages
-    if (messages.length > 2 && !isLoading) {
+    if (messages.length > 2 && !isLoading && currentConversation !== "") {
+      console.log("here 1")
       upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
     //for user messages
     if (messages.length > 2 && messages[messages.length - 1].role === "user") {
+      console.log("here 2")
       upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
   }, [messages, isLoading, currentConversation]);

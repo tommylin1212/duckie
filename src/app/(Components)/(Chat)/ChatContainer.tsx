@@ -15,8 +15,8 @@ const ChatContainer = ({
   handleInputChange,
   handleSubmit,
 }: ChatContainerProps) => (
-  <div className="pt-64px flex flex-1 flex-col bg-base-300">
-    <div className="flex flex-1 flex-col bg-base-200">
+  <div className="flex flex-grow flex-col bg-base-300 overflow-y-scroll max-h-[calc(100vh-64px)]">
+    <div className="flex flex-grow flex-col bg-base-200">
       <ChatResponse messages={messages} />
     </div>
     <ChatInput

@@ -1,11 +1,15 @@
 "use client";
 import Link from "next/link";
 import NavbarUser from "./navbarUser";
-export default function Navbar() {
+export default function Navbar(props: {
+  setShowSidebar: (show: boolean) => void;
+  showSidebar: boolean;
+  }) {
+  const { setShowSidebar, showSidebar } = props;
   return (
-    <div className="navbar fixed top-0 z-50 bg-base-100">
+    <div className="navbar flex fixed top-0 bg-base-100">
       <div className="flex-none">
-        <button className="btn-ghost btn-square btn">
+        <button className="btn-ghost btn-square btn" onClick={()=>setShowSidebar(!showSidebar)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

@@ -25,6 +25,7 @@ async function deleteConversationFromDB(
   return currentConversation;
 }
 export default function Page() {
+  const [showSidebar, setShowSidebar] = useState(true);
   const { user } = useUser();
   const [conversationId, setConversationId] = useState("");
   async function removeConversation(deleteConversationId: string) {
@@ -53,9 +54,13 @@ export default function Page() {
 
   return (
     <>
-      <Navbar />
-      <main className="flex h-[calc(100vh-64px)] flex-col bg-base-300 pl-64 pt-[64px]">
+    <div className="flex min-h-screen flex-col max-h-[calc(100vh-64px)] overflow-hidden">
+      <Navbar setShowSidebar={setShowSidebar} showSidebar={showSidebar}/>
+      <main className="flex flex-grow flex-col bg-base-300 pt-[64px] ">
+        <div className="flex flex-row flex-grow">
+
         <ConversationDrawer
+          showSidebar={showSidebar}
           setConversation={setConversationId}
           conversations={conversations}
           deleteConversation={removeConversation}
@@ -64,7 +69,9 @@ export default function Page() {
           currentConversation={conversationId}
           setConversation={setConversationId}
         />
+        </div>
       </main>
+      </div>
     </>
   );
 }
