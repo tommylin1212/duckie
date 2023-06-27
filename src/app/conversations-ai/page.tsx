@@ -54,23 +54,22 @@ export default function Page() {
 
   return (
     <>
-    <div className="flex min-h-screen flex-col max-h-[calc(100vh-64px)] overflow-hidden">
-      <Navbar setShowSidebar={setShowSidebar} showSidebar={showSidebar}/>
-      <main className="flex flex-grow flex-col bg-base-300 pt-[64px] ">
-        <div className="flex flex-row flex-grow">
-
-        <ConversationDrawer
-          showSidebar={showSidebar}
-          setConversation={setConversationId}
-          conversations={conversations}
-          deleteConversation={removeConversation}
-        />
-        <MainChat
-          currentConversation={conversationId}
-          setConversation={setConversationId}
-        />
-        </div>
-      </main>
+      <div className="flex max-h-[calc(100vh-64px)] min-h-screen flex-col overflow-hidden">
+        <Navbar setShowSidebar={setShowSidebar} showSidebar={showSidebar} />
+        <main className="flex flex-grow flex-col bg-base-300 pt-[64px] ">
+          <div className="flex flex-grow flex-row">
+            <ConversationDrawer
+              showSidebar={showSidebar}
+              setConversation={setConversationId}
+              conversations={conversations}
+              deleteConversation={removeConversation}
+            />
+            <MainChat
+              currentConversation={conversationId}
+              setConversation={setConversationId}
+            />
+          </div>
+        </main>
       </div>
     </>
   );

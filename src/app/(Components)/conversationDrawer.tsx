@@ -13,12 +13,16 @@ type ConversationDrawerProps = {
   showSidebar: boolean;
 };
 
-
 export default function ConversationDrawer(props: ConversationDrawerProps) {
   const [deleting, setDeleting] = useState("empty");
-  const{showSidebar, setConversation, conversations, deleteConversation} = props;
+  const { showSidebar, setConversation, conversations, deleteConversation } =
+    props;
   return (
-    <div  className={`left-0 max-w-[256px] flex-col overflow-y-scroll border-r max-h-[calc(100vh-64px)] bg-base-200 ${showSidebar ? 'flex':'hidden'}`}>
+    <div
+      className={`left-0 max-h-[calc(100vh-64px)] max-w-[256px] flex-col overflow-y-scroll border-r bg-base-200 ${
+        showSidebar ? "flex" : "hidden"
+      }`}
+    >
       <div className="navbar sticky top-0 z-10 h-10 justify-center bg-base-200">
         Conversations
       </div>
@@ -32,7 +36,12 @@ export default function ConversationDrawer(props: ConversationDrawerProps) {
       </div>
       {conversations.map((conversation) => {
         return (
-          <div key={conversation.id} className="flex flex-col p-2">
+          <div
+            key={conversation.id}
+            className={`${
+              deleting === conversation.id ? "hidden" : "flex"
+            } flex-col p-2`}
+          >
             <div className="join w-full">
               <button
                 className=" btn-neutral btn-active join-item btn flex flex-1 flex-row overflow-hidden break-all"

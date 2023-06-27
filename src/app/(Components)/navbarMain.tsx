@@ -9,11 +9,14 @@ interface NavbarProps {
 
 export default function Navbar(props: NavbarProps) {
   let { setShowSidebar, showSidebar } = props;
-  
+
   return (
-    <div className="navbar flex fixed top-0 bg-base-100">
+    <div className="navbar fixed top-0 flex bg-base-100">
       <div className="flex-none">
-        <button className="btn-ghost btn-square btn" onClick={()=>setShowSidebar && setShowSidebar(!showSidebar)}>
+        <button
+          className="btn-ghost btn-square btn"
+          onClick={() => setShowSidebar && setShowSidebar(!showSidebar)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -47,4 +50,4 @@ export default function Navbar(props: NavbarProps) {
       </div>
     </div>
   );
-  }
+}

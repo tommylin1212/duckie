@@ -8,6 +8,7 @@ import {
   createConversation,
   createMessage,
   getConversationByIdWithMessages,
+  getNewestConversationByClerkId,
   upsertMessageByMessageIdAndConversationId,
 } from "@/Utils/DB/operations";
 import { useUser } from "@clerk/nextjs";
@@ -138,6 +139,15 @@ export default function MainChat(props: MainChatProps) {
       message: Message,
       conversationId: string
     ) {
+      if (conversationId === "" && user) {
+        //look up the latest conversation for the user
+        //there should always be a conversation for the user
+
+        const conversation = await getNewestConversationByClerkId(user.id);
+        if (conversation[0]) {
+          conversationId = conversation[0].id;
+        }
+      }
       await upsertMessageByMessageIdAndConversationId(
         message.id,
         conversationId,
@@ -150,14 +160,14 @@ export default function MainChat(props: MainChatProps) {
       );
     }
     //for assistant messages
-    if (messages.length > 2 && !isLoading && currentConversation !== "") {
+    if (messages.length > 2 && !isLoading) {
       upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
     //for user messages
     if (messages.length > 2 && messages[messages.length - 1].role === "user") {
       upsertMessageAsync(messages[messages.length - 1], currentConversation);
     }
-  }, [messages, isLoading, currentConversation]);
+  }, [messages, isLoading, currentConversation, user]);
 
   return (
     <ChatContainer

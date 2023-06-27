@@ -60,6 +60,21 @@ export async function getAllConversationsByClerkId(
     },
   });
 }
+export async function getNewestConversationByClerkId(
+  clerkId: string
+): Promise<Conversation[]> {
+  return prisma.conversation.findMany({
+    where: {
+      user: {
+        clerkId,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 1,
+  });
+}
 
 export async function getAllConversations(): Promise<Conversation[]> {
   return prisma.conversation.findMany();
